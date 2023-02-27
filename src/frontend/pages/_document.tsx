@@ -48,12 +48,12 @@ export default class MyDocument extends Document<{ envString: string, traceId: s
           />
           <title>OTel demo</title>
 	  <Script id="instana-eum" strategy="beforeInteractive">{`
-	  (function(s,t,a,n){s[t]||(s[t]=a,n=s[a]=function(){n.q.push(arguments)},
-				    n.q=[],n.v=2,n.l=1*new Date)})(window,"InstanaEumObject","ineum");
-
-	  ineum('reportingUrl', 'https://instana.tec.cz.ibm.com:446/eum/');
-	  ineum('key', 'TSgzaBwgS622Twhz-5OlBQ');
-	  ineum('trackSessions');
+    (function(s,t,a,n){s[t]||(s[t]=a,n=s[a]=function(){n.q.push(arguments)},
+    n.q=[],n.v=2,n.l=1*new Date)})(window,"InstanaEumObject","ineum");
+  
+    ineum('reportingUrl', 'https://eum-red-saas.instana.io');
+    ineum('key', 'cm5iu7ZTSseUnG4qgCpAqw');
+    ineum('trackSessions');
 	  ineum('traceId', '${this.props.traceId}');
 	  `}</Script>
 	  <Script strategy="beforeInteractive" defer crossOrigin="anonymous" src="https://instana.tec.cz.ibm.com:446/eum/eum.min.js" />
