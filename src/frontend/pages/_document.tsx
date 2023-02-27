@@ -52,11 +52,11 @@ export default class MyDocument extends Document<{ envString: string, traceId: s
     n.q=[],n.v=2,n.l=1*new Date)})(window,"InstanaEumObject","ineum");
   
     ineum('reportingUrl', 'https://eum-red-saas.instana.io');
-    ineum('key', 'cm5iu7ZTSseUnG4qgCpAqw');
+    ineum('key', 'xyvBOngCSfCF5hsDWxQQnQ');
     ineum('trackSessions');
 	  ineum('traceId', '${this.props.traceId}');
 	  `}</Script>
-	  <Script strategy="beforeInteractive" defer crossOrigin="anonymous" src="https://instana.tec.cz.ibm.com:446/eum/eum.min.js" />
+	  <Script strategy="beforeInteractive" defer crossOrigin="anonymous" src="https://eum.instana.io/eum.min.js" />
         </Head>
         <body>
           <Main />

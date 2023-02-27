@@ -5,7 +5,6 @@ WORKDIR /app
 
 COPY ./src/frontend/package*.json ./
 RUN npm ci
-RUN npm install --save @instana/collector
 
 FROM node:18-alpine AS builder
 RUN apk add --no-cache libc6-compat protobuf-dev protoc
@@ -27,7 +26,7 @@ RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001
 
 COPY --from=builder /app/next.config.js ./
-COPY --from=builder /app/utils/telemetry/Instrumentation.js ./
+# COPY --from=builder /app/utils/telemetry/Instrumentation.js ./
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/package.json ./package.json
 COPY --from=deps /app/node_modules ./node_modules
@@ -37,8 +36,8 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 USER nextjs
 
+ENV NODE_OPTIONS="--require ./node_modules/@instana/collector/src/immediate"
 ENV PORT 8080
 EXPOSE ${PORT}
-ENV NODE_OPTIONS="--require ./node_modules/@instana/collector/src/immediate"
 
 ENTRYPOINT npm start
