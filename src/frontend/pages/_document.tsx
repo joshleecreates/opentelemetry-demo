@@ -51,8 +51,8 @@ export default class MyDocument extends Document<{ envString: string, traceId: s
     (function(s,t,a,n){s[t]||(s[t]=a,n=s[a]=function(){n.q.push(arguments)},
     n.q=[],n.v=2,n.l=1*new Date)})(window,"InstanaEumObject","ineum");
   
-    ineum('reportingUrl', 'https://eum-red-saas.instana.io');
-    ineum('key', 'xyvBOngCSfCF5hsDWxQQnQ');
+    ineum('reportingUrl', 'https://eum-green-saas.instana.io');
+    ineum('key', 'v20U3EbcR-m9_tJ8JzkhEg');
     ineum('trackSessions');
 	  ineum('traceId', '${this.props.traceId}');
 	  `}</Script>
