@@ -1,5 +1,3 @@
-// Copyright The OpenTelemetry Authors
-// SPDX-License-Identifier: Apache-2.0
 package main
 
 import (
@@ -18,6 +16,7 @@ import (
 
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
+	"go.opentelemetry.io/otel/metric"
 
 	"github.com/IBM/sarama"
 	"github.com/google/uuid"
@@ -50,6 +49,7 @@ import (
 
 var log *logrus.Logger
 var tracer trace.Tracer
+var cartTotalHistogram metric.Float64Histogram
 var resource *sdkresource.Resource
 var initResourcesOnce sync.Once
 
@@ -120,6 +120,21 @@ func initMeterProvider() *sdkmetric.MeterProvider {
 	return mp
 }
 
+func initHistogram() metric.Float64Histogram {
+  meter := otel.Meter("checkoutservice")
+  histogram, err := meter.Float64Histogram(
+    "app.order.amount",
+    metric.WithDescription("Total of items in cart"),
+    metric.WithUnit("USD"),
+  )
+
+  if(err != nil) {
+   log.Fatal(err)
+  }
+
+  return histogram
+}
+
 type checkoutService struct {
 	productCatalogSvcAddr string
 	cartSvcAddr           string
@@ -150,10 +165,14 @@ func main() {
 		}
 	}()
 
+  cartTotalHistogram = initHistogram()
+
 	err := runtime.Start(runtime.WithMinimumReadMemStatsInterval(time.Second))
 	if err != nil {
 		log.Fatal(err)
 	}
+
+
 
 	tracer = tp.Tracer("checkoutservice")
 
@@ -278,6 +297,7 @@ func (cs *checkoutService) PlaceOrder(ctx context.Context, req *pb.PlaceOrderReq
 		shippingTrackingAttribute,
 	)
 
+  cartTotalHistogram.Record(ctx, totalPriceFloat)
 	if err := cs.sendOrderConfirmation(ctx, req.Email, orderResult); err != nil {
 		log.Warnf("failed to send order confirmation to %q: %+v", req.Email, err)
 	} else {
