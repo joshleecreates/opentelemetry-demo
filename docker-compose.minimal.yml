@@ -1,5 +1,5 @@
 # Copyright The OpenTelemetry Authors
-# SPDX-License-Identifier: Apache-2.0
+
 
 x-default-logging: &logging
   driver: "json-file"
@@ -503,11 +503,7 @@ services:
       - FLAGD_METRICS_EXPORTER=otel
       - OTEL_RESOURCE_ATTRIBUTES
       - OTEL_SERVICE_NAME=flagd
-    command: [
-      "start",
-      "--uri",
-      "file:./etc/flagd/demo.flagd.json"
-    ]
+    command: [ "start", "--uri", "file:./etc/flagd/demo.flagd.json" ]
     ports:
       - 8013
     volumes:
@@ -565,7 +561,8 @@ services:
           memory: 100M
     restart: unless-stopped
     environment:
-      - "GF_INSTALL_PLUGINS=grafana-opensearch-datasource"
+      - "GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS=vertamedia-clickhouse-datasource,grafana-clickhouse-datasource"
+      - "GF_INSTALL_PLUGINS=vertamedia-clickhouse-datasource,grafana-clickhouse-datasource"
     volumes:
       - ./src/grafana/grafana.ini:/etc/grafana/grafana.ini
       - ./src/grafana/provisioning/:/etc/grafana/provisioning/
@@ -595,6 +592,11 @@ services:
     environment:
       - ENVOY_PORT
 
+  clickhouse:
+    image: docker.io/altinity/clickhouse-server:23.8.11.29.altinitystable
+    ports: 
+      - "8123:8123"
+      - "9000:9000"
   # Prometheus
   prometheus:
     image: ${PROMETHEUS_IMAGE}
