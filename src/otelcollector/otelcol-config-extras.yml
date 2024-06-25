@@ -38,8 +38,8 @@ exporters:
 service:
   pipelines:
     metrics:
-      exporters: [clickhouse]
+      exporters: [otlphttp/prometheus, clickhouse]
     logs:
-      exporters: [clickhouse]
+      exporters: [opensearch, clickhouse]
     traces:
-      exporters: [spanmetrics, clickhouse]
+      exporters: [otlp, spanmetrics, debug, clickhouse]
