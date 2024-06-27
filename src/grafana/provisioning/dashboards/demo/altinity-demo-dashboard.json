@@ -1,0 +1,1041 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 6,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 14,
+      "panels": [],
+      "title": "Requests Errors Duration",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "vertamedia-clickhouse-datasource",
+        "uid": "${clickhouse}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 1
+      },
+      "id": 12,
+      "interval": "10s",
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100
+      },
+      "targets": [
+        {
+          "add_metadata": true,
+          "database": "otel",
+          "datasource": {
+            "type": "vertamedia-clickhouse-datasource",
+            "uid": "${clickhouse}"
+          },
+          "dateTimeColDataType": "Timestamp",
+          "dateTimeType": "DATETIME64",
+          "editorMode": "builder",
+          "extrapolate": true,
+          "format": "time_series",
+          "formattedQuery": "SELECT $timeSeries as t, count() FROM $table WHERE $timeFilter GROUP BY t ORDER BY t",
+          "interval": "",
+          "intervalFactor": 1,
+          "query": "$rateColumns(SpanName, count() c) FROM $table \n  WHERE ServiceName='$service'\n    AND SpanKind = 'SPAN_KIND_SERVER'\n  GROUP BY t, SpanName \n  ORDER BY t",
+          "rawQuery": "/* grafana dashboard=Demo Dashboard, user=0 */\nSELECT (intDiv(toFloat64(Timestamp) * 1000, (1 * 1000)) * (1 * 1000)) as t, count() FROM otel.otel_traces WHERE Timestamp >= toDateTime64(1719319475, 3) AND Timestamp <= toDateTime64(1719320375, 3) GROUP BY t ORDER BY t",
+          "refId": "A",
+          "round": "0s",
+          "skip_comments": true,
+          "table": "otel_traces"
+        }
+      ],
+      "title": "Requests Rate for ${service} by span name",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "vertamedia-clickhouse-datasource",
+        "uid": "${clickhouse}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 1
+      },
+      "id": 10,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "add_metadata": true,
+          "database": "otel",
+          "datasource": {
+            "type": "vertamedia-clickhouse-datasource",
+            "uid": "${clickhouse}"
+          },
+          "dateTimeColDataType": "Timestamp",
+          "dateTimeType": "DATETIME64",
+          "editorMode": "builder",
+          "extrapolate": true,
+          "format": "time_series",
+          "formattedQuery": "SELECT $timeSeries as t, count() FROM $table WHERE $timeFilter GROUP BY t ORDER BY t",
+          "interval": "",
+          "intervalFactor": 1,
+          "query": "$rateColumns(SpanName, count() c) FROM $table \n  WHERE ServiceName='$service'\n    AND SpanKind = 'SPAN_KIND_SERVER'\n    AND StatusCode = 'STATUS_CODE_ERROR'\n  GROUP BY t, SpanName \n  ORDER BY t",
+          "rawQuery": "/* grafana dashboard=Demo Dashboard, user=0 */\nSELECT (intDiv(toFloat64(Timestamp) * 1000, (5 * 1000)) * (5 * 1000)) as t, count() FROM otel.otel_traces WHERE Timestamp >= toDateTime64(1719320457, 3) AND Timestamp <= toDateTime64(1719320757, 3) GROUP BY t ORDER BY t",
+          "refId": "A",
+          "round": "0s",
+          "skip_comments": true,
+          "table": "otel_traces"
+        }
+      ],
+      "title": "Error Rate for ${service} by span name",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "vertamedia-clickhouse-datasource",
+        "uid": "${clickhouse}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "dtdurationms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 1
+      },
+      "id": 2,
+      "interval": "5s",
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "add_metadata": true,
+          "database": "otel",
+          "datasource": {
+            "type": "vertamedia-clickhouse-datasource",
+            "uid": "${clickhouse}"
+          },
+          "dateTimeColDataType": "Timestamp",
+          "dateTimeType": "DATETIME64",
+          "editorMode": "builder",
+          "extrapolate": true,
+          "format": "time_series",
+          "formattedQuery": "SELECT $timeSeries as t, count() FROM $table WHERE $timeFilter GROUP BY t ORDER BY t",
+          "interval": "",
+          "intervalFactor": 1,
+          "query": "$columns(SpanName, avg(Duration/10e4) c) FROM $table \n  WHERE ServiceName='$service'\n    AND SpanKind = 'SPAN_KIND_SERVER'\n  GROUP BY t, SpanName \n  ORDER BY t",
+          "rawQuery": "/* grafana dashboard=Demo Dashboard, user=0 */\nSELECT (intDiv(toFloat64(Timestamp) * 1000, (5 * 1000)) * (5 * 1000)) as t, count() FROM otel.otel_traces WHERE Timestamp >= toDateTime64(1719324638, 3) AND Timestamp <= toDateTime64(1719325538, 3) GROUP BY t ORDER BY t",
+          "refId": "A",
+          "round": "0s",
+          "skip_comments": true,
+          "table": "otel_traces"
+        }
+      ],
+      "title": "Latency for ${service}",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "id": 19,
+      "panels": [],
+      "title": "Application Logs",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "vertamedia-clickhouse-datasource",
+        "uid": "${clickhouse}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 4,
+        "x": 0,
+        "y": 10
+      },
+      "id": 20,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "10.4.3",
+      "targets": [
+        {
+          "add_metadata": true,
+          "database": "otel",
+          "datasource": {
+            "type": "vertamedia-clickhouse-datasource",
+            "uid": "${clickhouse}"
+          },
+          "dateTimeColDataType": "Timestamp",
+          "dateTimeType": "DATETIME64",
+          "editorMode": "builder",
+          "extrapolate": false,
+          "format": "table",
+          "formattedQuery": "SELECT $timeSeries as t, count() FROM $table WHERE $timeFilter GROUP BY t ORDER BY t",
+          "interval": "",
+          "intervalFactor": 1,
+          "query": "SELECT count(), SeverityText FROM $table WHERE $timeFilter GROUP BY SeverityText",
+          "rawQuery": "/* grafana dashboard=Demo Dashboard, user=0 */\nSELECT SeverityText, count() FROM otel.otel_logs WHERE Timestamp >= toDateTime64(1719425782, 3) AND Timestamp <= toDateTime64(1719426682, 3) GROUP BY SeverityText",
+          "refId": "A",
+          "round": "0s",
+          "showFormattedSQL": true,
+          "skip_comments": true,
+          "table": "otel_logs"
+        }
+      ],
+      "title": "${service} Log entries by Severity",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "vertamedia-clickhouse-datasource",
+        "uid": "${clickhouse}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 20,
+        "x": 4,
+        "y": 10
+      },
+      "id": 17,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "10.4.3",
+      "targets": [
+        {
+          "add_metadata": true,
+          "database": "otel",
+          "datasource": {
+            "type": "vertamedia-clickhouse-datasource",
+            "uid": "${clickhouse}"
+          },
+          "dateTimeColDataType": "Timestamp",
+          "dateTimeType": "DATETIME64",
+          "editorMode": "builder",
+          "extrapolate": true,
+          "format": "table",
+          "formattedQuery": "SELECT $timeSeries as t, count() FROM $table WHERE $timeFilter GROUP BY t ORDER BY t",
+          "interval": "",
+          "intervalFactor": 1,
+          "query": "SELECT * FROM $table WHERE $timeFilter AND ServiceName='$service'",
+          "rawQuery": "/* grafana dashboard=Demo Dashboard, user=0 */\nSELECT (intDiv(toFloat64(Timestamp) * 1000, (1 * 1000)) * (1 * 1000)) as t, count() FROM otel.otel_logs WHERE Timestamp >= toDateTime64(1719425843, 3) AND Timestamp <= toDateTime64(1719426743, 3) GROUP BY t ORDER BY t",
+          "refId": "A",
+          "round": "0s",
+          "skip_comments": true,
+          "table": "otel_logs"
+        }
+      ],
+      "title": "${service} Logs",
+      "type": "table"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 18
+      },
+      "id": 18,
+      "panels": [],
+      "title": "Application Metrics",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "vertamedia-clickhouse-datasource",
+        "uid": "${clickhouse}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 19
+      },
+      "id": 6,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "add_metadata": true,
+          "database": "otel",
+          "datasource": {
+            "type": "vertamedia-clickhouse-datasource",
+            "uid": "${clickhouse}"
+          },
+          "dateTimeColDataType": "TimeUnix",
+          "dateTimeType": "DATETIME64",
+          "editorMode": "builder",
+          "extrapolate": true,
+          "format": "time_series",
+          "formattedQuery": "SELECT $timeSeries as t, count() FROM $table WHERE $timeFilter GROUP BY t ORDER BY t",
+          "interval": "",
+          "intervalFactor": 1,
+          "query": "SELECT $timeSeries AS t, max(cpu_utilization) as CPU, scope FROM\n(SELECT \n    TimeUnix,\n    toFloat64(TimeUnix) AS timestamp,\n    Attributes['type'] AS scope,\n    Value AS cpu_time,\n    any(cpu_time) OVER(PARTITION BY scope ORDER BY TimeUnix ROWS BETWEEN 1 PRECEDING AND 1 PRECEDING) as prev_cpu_time,\n    cpu_time-prev_cpu_time AS delta_cpu_time,\n    (timestamp - any(timestamp) OVER (PARTITION BY scope ORDER BY timestamp ROWS BETWEEN 1 PRECEDING AND 1 PRECEDING)) AS interval_seconds,\n    if(delta_cpu_time > 0 and interval_seconds > 0, delta_cpu_time / interval_seconds*100, 0) AS cpu_utilization\nFROM otel.otel_metrics_sum \nWHERE TimeUnix >= ($from - 200) AND TimeUnix <= $to\nAND MetricName='process.runtime.cpython.cpu_time' \nAND ServiceName='$service'\nORDER BY TimeUnix ASC\n)\nWHERE TimeUnix >= ($from-100) AND TimeUnix <= $to\nGROUP BY t, scope\nORDER BY t, scope",
+          "rawQuery": "/* grafana dashboard=Demo Dashboard, user=0 */\nSELECT (intDiv(toFloat64(TimeUnix) * 1000, (1 * 1000)) * (1 * 1000)) AS t, max(cpu_utilization) as CPU, scope FROM\n(SELECT \n    TimeUnix,\n    toFloat64(TimeUnix) AS timestamp,\n    Attributes['type'] AS scope,\n    Value AS cpu_time,\n    any(cpu_time) OVER(PARTITION BY scope ORDER BY TimeUnix ROWS BETWEEN 1 PRECEDING AND 1 PRECEDING) as prev_cpu_time,\n    cpu_time-prev_cpu_time AS delta_cpu_time,\n    (timestamp - any(timestamp) OVER (PARTITION BY scope ORDER BY timestamp ROWS BETWEEN 1 PRECEDING AND 1 PRECEDING)) AS interval_seconds,\n    if(delta_cpu_time > 0 and interval_seconds > 0, delta_cpu_time / interval_seconds*100, 0) AS cpu_utilization\nFROM otel.otel_metrics_sum \nWHERE TimeUnix >= (1719336228 - 200) AND TimeUnix <= 1719336528\nAND MetricName='process.runtime.cpython.cpu_time' \nAND ServiceName='recommendationservice'\nORDER BY TimeUnix ASC\n)\nWHERE TimeUnix >= (1719336228-100) AND TimeUnix <= 1719336528\nGROUP BY t, scope\nORDER BY t, scope",
+          "refId": "A",
+          "round": "0s",
+          "skip_comments": true,
+          "table": "otel_metrics_sum"
+        }
+      ],
+      "title": "Python services (CPU%)",
+      "transformations": [
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "opentelemetry-demo/(.*)",
+            "renamePattern": "$1"
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "vertamedia-clickhouse-datasource",
+        "uid": "${clickhouse}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 19
+      },
+      "id": 8,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "add_metadata": true,
+          "database": "otel",
+          "datasource": {
+            "type": "vertamedia-clickhouse-datasource",
+            "uid": "${clickhouse}"
+          },
+          "dateTimeColDataType": "TimeUnix",
+          "dateTimeType": "DATETIME64",
+          "editorMode": "builder",
+          "extrapolate": true,
+          "format": "time_series",
+          "formattedQuery": "SELECT $timeSeries as t, count() FROM $table WHERE $timeFilter GROUP BY t ORDER BY t",
+          "interval": "",
+          "intervalFactor": 1,
+          "query": "SELECT $timeSeries AS t, max(bytes) as memory, scope FROM\n(SELECT \n    TimeUnix,\n    Value AS bytes,\n    Attributes['type'] AS scope\nFROM otel.otel_metrics_sum \nWHERE $timeFilter\nAND MetricName='process.runtime.cpython.memory' \nAND ServiceName='$service'\nORDER BY TimeUnix ASC\n)\nWHERE TimeUnix >= ($from-100) AND TimeUnix <= $to\nGROUP BY t, scope\nORDER BY t, scope",
+          "rawQuery": "/* grafana dashboard=Demo Dashboard, user=0 */\nSELECT (intDiv(toFloat64(TimeUnix) * 1000, (1 * 1000)) * (1 * 1000)) AS t, max(Value) as memory, scope FROM\n(SELECT \n    TimeUnix,\n    Value AS bytes,\n    Attributes['type'] AS scope\nFROM otel.otel_metrics_sum \nWHERE TimeUnix >= toDateTime64(1719336188, 3) AND TimeUnix <= toDateTime64(1719336488, 3)\nAND MetricName='process.runtime.cpython.memory' \nAND ServiceName='recommendationservice'\nORDER BY TimeUnix ASC\n)\nWHERE TimeUnix >= (1719336188-100) AND TimeUnix <= 1719336488\nGROUP BY t, scope\nORDER BY t, scope",
+          "refId": "A",
+          "round": "0s",
+          "skip_comments": true,
+          "table": "otel_metrics_sum"
+        }
+      ],
+      "title": "Python services (Memory)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "vertamedia-clickhouse-datasource",
+        "uid": "${clickhouse}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 27
+      },
+      "id": 4,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "add_metadata": true,
+          "database": "otel",
+          "datasource": {
+            "type": "vertamedia-clickhouse-datasource",
+            "uid": "${clickhouse}"
+          },
+          "dateTimeColDataType": "TimeUnix",
+          "dateTimeType": "DATETIME64",
+          "editorMode": "builder",
+          "extrapolate": true,
+          "format": "time_series",
+          "formattedQuery": "SELECT $timeSeries as t, count() FROM $table WHERE $timeFilter GROUP BY t ORDER BY t",
+          "interval": "",
+          "intervalFactor": 1,
+          "query": "SELECT $timeSeries AS t, max(rate) as recomendations FROM\n(SELECT \n    TimeUnix,\n    toFloat64(TimeUnix) AS timestamp,\n    Value AS value,\n    any(value) OVER(ORDER BY TimeUnix ROWS BETWEEN 1 PRECEDING AND 1 PRECEDING) as prev_value,\n    value-prev_value AS delta,\n    (timestamp - any(timestamp) OVER (ORDER BY timestamp ROWS BETWEEN 1 PRECEDING AND 1 PRECEDING)) AS interval_seconds,\n    if(delta > 0 and interval_seconds > 0, delta, 0) AS rate\nFROM otel.otel_metrics_sum \nWHERE TimeUnix >= ($from - 200) AND TimeUnix <= $to\nAND MetricName='app_recommendations_counter' \nAND ServiceName='$service'\nORDER BY TimeUnix ASC\n)\nWHERE TimeUnix >= ($from-100) AND TimeUnix <= $to\nGROUP BY t\nORDER BY t",
+          "rawQuery": "/* grafana dashboard=Demo Dashboard, user=0 */\nSELECT (intDiv(toFloat64(TimeUnix) * 1000, (1 * 1000)) * (1 * 1000)) as t, count() FROM otel.otel_metrics_sum WHERE TimeUnix >= toDateTime64(1719335457, 3) AND TimeUnix <= toDateTime64(1719335757, 3) GROUP BY t ORDER BY t",
+          "refId": "A",
+          "round": "0s",
+          "skip_comments": true,
+          "table": "otel_metrics_sum"
+        }
+      ],
+      "title": "Recommendations Rate",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "webstore-metrics"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 27
+      },
+      "id": 16,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "webstore-metrics"
+          },
+          "editorMode": "code",
+          "expr": "rate(otel_trace_span_processor_spans{job=\"opentelemetry-demo/quoteservice\"}[2m])*120",
+          "interval": "2m",
+          "legendFormat": "{{state}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Quote Service batch span processor",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "",
+  "revision": 1,
+  "schemaVersion": 39,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "allValue": "",
+        "current": {
+          "selected": false,
+          "text": "frontend",
+          "value": "frontend"
+        },
+        "datasource": {
+          "type": "vertamedia-clickhouse-datasource",
+          "uid": "${clickhouse}"
+        },
+        "definition": "SELECT DISTINCT ServiceName FROM otel.otel_traces",
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "service",
+        "options": [],
+        "query": "SELECT DISTINCT ServiceName FROM otel.otel_traces",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "Altinity",
+          "value": "webstore-altinity"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "clickhouse",
+        "options": [],
+        "query": "vertamedia-clickhouse-datasource",
+        "queryValue": "",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-15m",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Demo Dashboard (ClickHouse with Altinity)",
+  "uid": "W2gX2zHVka",
+  "version": 28,
+  "weekStart": ""
+}

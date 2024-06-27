@@ -10,7 +10,7 @@ datasources:
     type: prometheus
     url: http://prometheus:9090
     editable: true
-    isDefault: true
+    isDefault: false
     jsonData:
       exemplarTraceIdDestinations:
         - datasourceUid: webstore-traces
