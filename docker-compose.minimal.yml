@@ -561,14 +561,20 @@ services:
           memory: 100M
     restart: unless-stopped
     environment:
-      - "GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS=vertamedia-clickhouse-datasource,grafana-clickhouse-datasource"
-      - "GF_INSTALL_PLUGINS=vertamedia-clickhouse-datasource,grafana-clickhouse-datasource"
+      - "GF_INSTALL_PLUGINS=grafana-opensearch-datasource,vertamedia-clickhouse-datasource"
     volumes:
       - ./src/grafana/grafana.ini:/etc/grafana/grafana.ini
       - ./src/grafana/provisioning/:/etc/grafana/provisioning/
     ports:
       - "${GRAFANA_SERVICE_PORT}"
     logging: *logging
+
+  # Clickhouse
+  clickhouse:
+    image: docker.io/altinity/clickhouse-server:23.8.11.29.altinitystable
+    ports: 
+      - "8123:8123"
+      - "9000:9000"
 
   # OpenTelemetry Collector
   otelcol:
@@ -592,11 +598,6 @@ services:
     environment:
       - ENVOY_PORT
 
-  clickhouse:
-    image: docker.io/altinity/clickhouse-server:23.8.11.29.altinitystable
-    ports: 
-      - "8123:8123"
-      - "9000:9000"
   # Prometheus
   prometheus:
     image: ${PROMETHEUS_IMAGE}
