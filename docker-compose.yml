@@ -23,17 +23,17 @@ services:
     container_name: accounting-service
     build:
       context: ./
-      dockerfile: ./src/accountingservice/Dockerfile
+      dockerfile: ${ACCOUNTING_SERVICE_DOCKERFILE}
       cache_from:
         - ${IMAGE_NAME}:${IMAGE_VERSION}-accountingservice
     deploy:
       resources:
         limits:
-          memory: 20M
+          memory: 120M
     restart: unless-stopped
     environment:
       - KAFKA_SERVICE_ADDR
-      - OTEL_EXPORTER_OTLP_ENDPOINT
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://${OTEL_COLLECTOR_HOST}:${OTEL_COLLECTOR_PORT_HTTP}
       - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
       - OTEL_RESOURCE_ATTRIBUTES
       - OTEL_SERVICE_NAME=accountingservice
@@ -50,9 +50,11 @@ services:
     container_name: ad-service
     build:
       context: ./
-      dockerfile: ./src/adservice/Dockerfile
+      dockerfile: ${AD_SERVICE_DOCKERFILE}
       cache_from:
         - ${IMAGE_NAME}:${IMAGE_VERSION}-adservice
+      args:
+        OTEL_JAVA_AGENT_VERSION: ${OTEL_JAVA_AGENT_VERSION}
     deploy:
       resources:
         limits:
@@ -82,7 +84,7 @@ services:
     container_name: cart-service
     build:
       context: ./
-      dockerfile: ./src/cartservice/src/Dockerfile
+      dockerfile: ${CART_SERVICE_DOCKERFILE}
       cache_from:
         - ${IMAGE_NAME}:${IMAGE_VERSION}-cartservice
     deploy:
@@ -96,13 +98,13 @@ services:
       - CART_SERVICE_PORT
       - FLAGD_HOST
       - FLAGD_PORT
-      - REDIS_ADDR
+      - VALKEY_ADDR
       - OTEL_EXPORTER_OTLP_ENDPOINT
       - OTEL_RESOURCE_ATTRIBUTES
       - OTEL_SERVICE_NAME=cartservice
       - ASPNETCORE_URLS=http://*:${CART_SERVICE_PORT}
     depends_on:
-      redis-cart:
+      valkey-cart:
         condition: service_started
       otelcol:
         condition: service_started
@@ -116,7 +118,7 @@ services:
     container_name: checkout-service
     build:
       context: ./
-      dockerfile: ./src/checkoutservice/Dockerfile
+      dockerfile: ${CHECKOUT_SERVICE_DOCKERFILE}
       cache_from:
         - ${IMAGE_NAME}:${IMAGE_VERSION}-checkoutservice
     deploy:
@@ -168,9 +170,11 @@ services:
     container_name: currency-service
     build:
       context: ./
-      dockerfile: ./src/currencyservice/Dockerfile
+      dockerfile: ${CURRENCY_SERVICE_DOCKERFILE}
       cache_from:
         - ${IMAGE_NAME}:${IMAGE_VERSION}-currencyservice
+      args:
+        OPENTELEMETRY_CPP_VERSION: ${OPENTELEMETRY_CPP_VERSION}
     deploy:
       resources:
         limits:
@@ -193,7 +197,8 @@ services:
     image: ${IMAGE_NAME}:${DEMO_VERSION}-emailservice
     container_name: email-service
     build:
-      context: ./src/emailservice
+      context: ./
+      dockerfile: ${EMAIL_SERVICE_DOCKERFILE}
       cache_from:
         - ${IMAGE_NAME}:${IMAGE_VERSION}-emailservice
     deploy:
@@ -220,9 +225,11 @@ services:
     container_name: frauddetection-service
     build:
       context: ./
-      dockerfile: ./src/frauddetectionservice/Dockerfile
+      dockerfile: ${FRAUD_SERVICE_DOCKERFILE}
       cache_from:
         - ${IMAGE_NAME}:${IMAGE_VERSION}-frauddetectionservice
+      args:
+        OTEL_JAVA_AGENT_VERSION: ${OTEL_JAVA_AGENT_VERSION}
     deploy:
       resources:
         limits:
@@ -251,7 +258,7 @@ services:
     container_name: frontend
     build:
       context: ./
-      dockerfile: ./src/frontend/Dockerfile
+      dockerfile: ${FRONTEND_DOCKERFILE}
       cache_from:
         - ${IMAGE_NAME}:${IMAGE_VERSION}-frontend
     deploy:
@@ -312,7 +319,7 @@ services:
     container_name: frontend-proxy
     build:
       context: ./
-      dockerfile: src/frontendproxy/Dockerfile
+      dockerfile: ${FRONTEND_PROXY_DOCKERFILE}
     deploy:
       resources:
         limits:
@@ -339,6 +346,8 @@ services:
       - ENVOY_PORT
       - FLAGD_HOST
       - FLAGD_PORT
+      - FLAGD_UI_HOST
+      - FLAGD_UI_PORT
     depends_on:
       frontend:
         condition: service_started
@@ -348,6 +357,8 @@ services:
         condition: service_started
       grafana:
         condition: service_started
+      flagdui:
+        condition: service_started
 
   # Imageprovider
   imageprovider:
@@ -355,7 +366,7 @@ services:
     container_name: imageprovider
     build:
       context: ./
-      dockerfile: ./src/imageprovider/Dockerfile
+      dockerfile: ${IMAGE_PROVIDER_DOCKERFILE}
       cache_from:
         - ${IMAGE_NAME}:${IMAGE_VERSION}-imageprovider
     deploy:
@@ -382,7 +393,7 @@ services:
     container_name: load-generator
     build:
       context: ./
-      dockerfile: ./src/loadgenerator/Dockerfile
+      dockerfile: ${LOAD_GENERATOR_DOCKERFILE}
       cache_from:
         - ${IMAGE_NAME}:${IMAGE_VERSION}-loadgenerator
     deploy:
@@ -420,7 +431,7 @@ services:
     container_name: payment-service
     build:
       context: ./
-      dockerfile: ./src/paymentservice/Dockerfile
+      dockerfile: ${PAYMENT_SERVICE_DOCKERFILE}
       cache_from:
         - ${IMAGE_NAME}:${IMAGE_VERSION}-paymentservice
     deploy:
@@ -451,7 +462,7 @@ services:
     container_name: product-catalog-service
     build:
       context: ./
-      dockerfile: ./src/productcatalogservice/Dockerfile
+      dockerfile: ${PRODUCT_CATALOG_DOCKERFILE}
       cache_from:
         - ${IMAGE_NAME}:${IMAGE_VERSION}-productcatalogservice
     deploy:
@@ -482,7 +493,7 @@ services:
     container_name: quote-service
     build:
       context: ./
-      dockerfile: ./src/quoteservice/Dockerfile
+      dockerfile: ${QUOTE_SERVICE_DOCKERFILE}
       cache_from:
         - ${IMAGE_NAME}:${IMAGE_VERSION}-quoteservice
     deploy:
@@ -510,7 +521,7 @@ services:
     container_name: recommendation-service
     build:
       context: ./
-      dockerfile: ./src/recommendationservice/Dockerfile
+      dockerfile: ${RECOMMENDATION_SERVICE_DOCKERFILE}
       cache_from:
         - ${IMAGE_NAME}:${IMAGE_VERSION}-recommendationservice
     deploy:
@@ -546,7 +557,7 @@ services:
     container_name: shipping-service
     build:
       context: ./
-      dockerfile: ./src/shippingservice/Dockerfile
+      dockerfile: ${SHIPPING_SERVICE_DOCKERFILE}
       cache_from:
         - ${IMAGE_NAME}:${IMAGE_VERSION}-shippingservice
     deploy:
@@ -578,6 +589,7 @@ services:
       resources:
         limits:
           memory: 50M
+    restart: unless-stopped
     environment:
       - FLAGD_OTEL_COLLECTOR_URI=${OTEL_COLLECTOR_HOST}:${OTEL_COLLECTOR_PORT_GRPC}
       - FLAGD_METRICS_EXPORTER=otel
@@ -595,15 +607,44 @@ services:
     logging:
       *logging
 
+  # Flagd UI for configuring the feature flag service
+  flagdui:
+    image: ${IMAGE_NAME}:${DEMO_VERSION}-flagdui
+    container_name: flagdui
+    build:
+      context: ./
+      dockerfile: ${FLAGD_UI_DOCKERFILE}
+    deploy:
+      resources:
+        limits:
+          memory: 150M
+    restart: unless-stopped
+    environment:
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://${OTEL_COLLECTOR_HOST}:${OTEL_COLLECTOR_PORT_HTTP}
+      - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+      - OTEL_RESOURCE_ATTRIBUTES
+      - OTEL_SERVICE_NAME=flagdui
+    ports:
+      - "${FLAGD_UI_PORT}"
+    depends_on:
+      otelcol:
+        condition: service_started
+      flagd:
+        condition: service_started
+    volumes:
+      - ./src/flagd:/app/data
+
   # Kafka used by Checkout, Accounting, and Fraud Detection services
   kafka:
     image: ${IMAGE_NAME}:${DEMO_VERSION}-kafka
     container_name: kafka
     build:
       context: ./
-      dockerfile: ./src/kafka/Dockerfile
+      dockerfile: ${KAFKA_SERVICE_DOCKERFILE}
       cache_from:
         - ${IMAGE_NAME}:${IMAGE_VERSION}-kafka
+      args:
+        OTEL_JAVA_AGENT_VERSION: ${OTEL_JAVA_AGENT_VERSION}
     deploy:
       resources:
         limits:
@@ -624,18 +665,18 @@ services:
       retries: 10
     logging: *logging
 
-  # Redis used by Cart service
-  redis-cart:
-    image: ${REDIS_IMAGE}
-    container_name: redis-cart
-    user: redis
+  # Valkey used by Cart service
+  valkey-cart:
+    image: ${VALKEY_IMAGE}
+    container_name: valkey-cart
+    user: valkey
     deploy:
       resources:
         limits:
           memory: 20M
     restart: unless-stopped
     ports:
-      - "${REDIS_PORT}"
+      - "${VALKEY_PORT}"
     logging: *logging
 
 
@@ -699,17 +740,27 @@ services:
           memory: 200M
     restart: unless-stopped
     command: [ "--config=/etc/otelcol-config.yml", "--config=/etc/otelcol-config-extras.yml" ]
+    user: 0:0
     volumes:
-      - ./src/otelcollector/otelcol-config.yml:/etc/otelcol-config.yml
-      - ./src/otelcollector/otelcol-config-extras.yml:/etc/otelcol-config-extras.yml
+      - ${HOST_FILESYSTEM}:/hostfs:ro
+      - ${DOCKER_SOCK}:/var/run/docker.sock:ro
+      - ${OTEL_COLLECTOR_CONFIG}:/etc/otelcol-config.yml
+      - ${OTEL_COLLECTOR_CONFIG_EXTRAS}:/etc/otelcol-config-extras.yml
     ports:
       - "${OTEL_COLLECTOR_PORT_GRPC}"
       - "${OTEL_COLLECTOR_PORT_HTTP}"
     depends_on:
-      - jaeger
+      jaeger:
+        condition: service_started
+      opensearch:
+        condition: service_healthy
     logging: *logging
     environment:
       - ENVOY_PORT
+      - HOST_FILESYSTEM
+      - OTEL_COLLECTOR_HOST
+      - OTEL_COLLECTOR_PORT_GRPC
+      - OTEL_COLLECTOR_PORT_HTTP
 
   # Prometheus
   prometheus:
@@ -762,132 +813,10 @@ services:
         hard: 65536
     ports:
       - "9200"
+    healthcheck:
+      test: curl -s http://localhost:9200/_cluster/health | grep -E '"status":"(green|yellow)"'
+      start_period: 10s
+      interval: 5s
+      timeout: 10s
+      retries: 10
     logging: *logging
-
-  # *****
-  # Tests
-  # *****
-  # Frontend Tests
-  frontendTests:
-    image: ${IMAGE_NAME}:${DEMO_VERSION}-frontend-tests
-    container_name: frontend-tests
-    build:
-      context: ./
-      dockerfile: ./src/frontend/Dockerfile.cypress
-    profiles:
-      - tests
-    volumes:
-      - ./src/frontend/cypress/videos:/app/cypress/videos
-      - ./src/frontend/cypress/screenshots:/app/cypress/screenshots
-    environment:
-      - CYPRESS_baseUrl=http://${FRONTEND_ADDR}
-      - FRONTEND_ADDR
-      - NODE_ENV=production
-    depends_on:
-      - frontend
-
-  # Tracebased Tests
-  traceBasedTests:
-    image: ${IMAGE_NAME}:${DEMO_VERSION}-traceBasedTests
-    container_name: traceBasedTests
-    profiles:
-      - tests
-    build:
-      context: ./
-      dockerfile: ./test/tracetesting/Dockerfile
-    environment:
-      - AD_SERVICE_ADDR
-      - CART_SERVICE_ADDR
-      - CHECKOUT_SERVICE_ADDR
-      - CURRENCY_SERVICE_ADDR
-      - EMAIL_SERVICE_ADDR
-      - FRONTEND_ADDR
-      - PAYMENT_SERVICE_ADDR
-      - PRODUCT_CATALOG_SERVICE_ADDR
-      - RECOMMENDATION_SERVICE_ADDR
-      - SHIPPING_SERVICE_ADDR
-      - KAFKA_SERVICE_ADDR
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    volumes:
-      - ./test/tracetesting:/app/test/tracetesting
-      - ./pb:/app/pb
-    depends_on:
-      tracetest-server:
-        condition: service_healthy
-      # adding demo services as dependencies
-      frontend:
-        condition: service_started
-      adservice:
-        condition: service_started
-      cartservice:
-        condition: service_started
-      checkoutservice:
-        condition: service_started
-      currencyservice:
-        condition: service_started
-      emailservice:
-        condition: service_started
-      paymentservice:
-        condition: service_started
-      productcatalogservice:
-        condition: service_started
-      recommendationservice:
-        condition: service_started
-      shippingservice:
-        condition: service_started
-      quoteservice:
-        condition: service_started
-      accountingservice:
-        condition: service_started
-      frauddetectionservice:
-        condition: service_started
-      flagd:
-        condition: service_started
-
-  tracetest-server:
-    image: ${TRACETEST_IMAGE}
-    platform: linux/amd64
-    container_name: tracetest-server
-    profiles:
-      - tests
-      - odd          # Observabilty-Driven Development (ODD)
-    volumes:
-      - type: bind
-        source: ./test/tracetesting/tracetest-config.yaml
-        target: /app/tracetest.yaml
-      - type: bind
-        source: ./test/tracetesting/tracetest-provision.yaml
-        target: /app/provision.yaml
-    command: --provisioning-file /app/provision.yaml
-    ports:
-      - 11633:11633
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    depends_on:
-      tracetest-postgres:
-        condition: service_healthy
-      otelcol:
-        condition: service_started
-    healthcheck:
-      test: [ "CMD", "wget", "--spider", "localhost:11633" ]
-      interval: 1s
-      timeout: 3s
-      retries: 60
-
-  tracetest-postgres:
-    image: ${POSTGRES_IMAGE}
-    container_name: tracetest-postgres
-    profiles:
-      - tests
-      - odd          # Observabilty-Driven Development (ODD)
-    environment:
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_USER: postgres
-    healthcheck:
-      test: pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"
-      interval: 1s
-      timeout: 5s
-      retries: 60
-    ports:
-      - 5432

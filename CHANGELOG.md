@@ -7,6 +7,73 @@ the release.
 
 ## Unreleased
 
+* [grafana] Update grafana to 11.3.0
+  ([#1764](https://github.com/open-telemetry/opentelemetry-demo/pull/1764))
+* [chore] Move build args to .env file
+  ([#1767](https://github.com/open-telemetry/opentelemetry-demo/pull/1767))
+* [grafana] Fix Dashboards
+  ([#1779](https://github.com/open-telemetry/opentelemetry-demo/pull/1779))
+* [accountingservice] bump OpenTelemetry .NET Automatic Instrumentation
+  to 1.9.0 ([#1780](https://github.com/open-telemetry/opentelemetry-demo/pull/1780))
+
+## 1.12.0
+
+* [accountingservice] allow running the container with non root user
+  ([#1692](https://github.com/open-telemetry/opentelemetry-demo/pull/1692))
+* [chore] Add yamllint to `make all`
+  ([#1707](https://github.com/open-telemetry/opentelemetry-demo/pull/1707))
+* [chore] Fix gen-proto for accountingservice
+  ([#1709](https://github.com/open-telemetry/opentelemetry-demo/pull/1709))
+* [chore] Add depends on to otelcol to wait on healthy opensearch
+  ([#1724](https://github.com/open-telemetry/opentelemetry-demo/pull/1724))
+* [flagd-ui] Add UI for managing Flagd feature flags
+  ([#1725](https://github.com/open-telemetry/opentelemetry-demo/pull/1725))
+* [accountingservice] bump OpenTelemetry .NET Automatic Instrumentation
+  to 1.8.0 together with other dependencies
+  ([#1727](https://github.com/open-telemetry/opentelemetry-demo/pull/1727))
+* [frontend] fix imageSlowLoad headers not applied
+  to 1.8.0 together with other dependencies
+  ([#1733](https://github.com/open-telemetry/opentelemetry-demo/pull/1733))
+* [cartservice] Propagate cartservice exceptions
+  ([#1744](https://github.com/open-telemetry/opentelemetry-demo/pull/1744))
+* [cartservice] Update cart service to fail when cartServiceFailure is enabled
+  ([#1748](https://github.com/open-telemetry/opentelemetry-demo/pull/1748))
+
+## 1.11.1
+
+* [otel-col] Add docker stats receiver
+  ([#1650](https://github.com/open-telemetry/opentelemetry-demo/pull/1650))
+* [otel-col] strip high-cardinality segments of span names
+  ([#1668](https://github.com/open-telemetry/opentelemetry-demo/pull/1668))
+* [tests] run trace based tests concurrently
+  ([#1659](https://github.com/open-telemetry/opentelemetry-demo/pull/1659))
+* [otel-col] Set OTLP receiver endpoint to avoid breaking changes
+  ([#1662](https://github.com/open-telemetry/opentelemetry-demo/pull/1662))
+* [accountingservice] increase memory to 120MB
+  ([#1666](https://github.com/open-telemetry/opentelemetry-demo/pull/1666))
+* [frontend] Update nodejs to latest LTS and bump dependencies
+  ([#1670](https://github.com/open-telemetry/opentelemetry-demo/pull/1670))
+* [otel-col] Add host metrics receiver
+  ([#1675](https://github.com/open-telemetry/opentelemetry-demo/pull/1675))
+* [adservice] bump dependencies & gradle version
+  ([#1681](https://github.com/open-telemetry/opentelemetry-demo/pull/1681))
+
+## 1.11.0
+
+* [accountingservice] convert from Go service to .NET service, uses
+  OpenTelemetry .NET Automatic Instrumentation.
+  ([#1538](https://github.com/open-telemetry/opentelemetry-demo/pull/1538))
+* [frontend] fixed default flagd port for HTTPS connections
+  ([#1609](https://github.com/open-telemetry/opentelemetry-demo/pull/1609))
+* [cartservice] bump .NET package to 1.9.0 release
+  ([#1610](https://github.com/open-telemetry/opentelemetry-demo/pull/1610))
+* [Valkey] Replace Redis with Valkey
+  ([#1619](https://github.com/open-telemetry/opentelemetry-demo/pull/1619))
+* [recommendation] updated flag name to match flagd configuration
+  ([#1634](https://github.com/open-telemetry/opentelemetry-demo/pull/1634))
+
+## 1.10.0
+
 * [frauddetectionservice] use span links when consuming from Kafka
   ([#1501](https://github.com/open-telemetry/opentelemetry-demo/pull/1501))
 * [frontend] reunite trace from loadgenerator
@@ -38,7 +105,8 @@ the release.
 * [frontend] Fix imageloading issues on optimized images. bump next.js version
   ([#1571](https://github.com/open-telemetry/opentelemetry-demo/pull/1571))
 * [cartservice] bump .NET package to 1.8.1 release
-  ([#1514](https://github.com/open-telemetry/opentelemetry-demo/pull/1514)), ([#1580](https://github.com/open-telemetry/opentelemetry-demo/pull/1580))
+  ([#1514](https://github.com/open-telemetry/opentelemetry-demo/pull/1514),
+   [#1580](https://github.com/open-telemetry/opentelemetry-demo/pull/1580))
 * [kafka] Fix permission issue with the telemetry agent when running in docker compose
   ([#1574](https://github.com/open-telemetry/opentelemetry-demo/pull/1574))
 * [flagd] Add flagd service to minimal docker compose deployment
